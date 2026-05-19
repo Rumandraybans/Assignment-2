@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Student</title>
+
+    <style>
+        body{
+            font-family: Arial;
+            background:#f4f4f4;
+        }
+
+        .container{
+            width:450px;
+            margin:50px auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.2);
+        }
+
+        h1{
+            text-align:center;
+        }
+
+        label{
+            font-weight:bold;
+        }
+
+        input{
+            width:100%;
+            padding:10px;
+            margin-top:5px;
+            margin-bottom:15px;
+            border:1px solid #ccc;
+            border-radius:5px;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            background:green;
+            color:white;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        button:hover{
+            background:darkgreen;
+        }
+
+        .nav{
+            text-align:center;
+            margin-bottom:20px;
+        }
+
+        .nav a{
+            text-decoration:none;
+            margin:0 10px;
+            color:#007bff;
+            font-weight:bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="nav">
+        <a href="/">Home Page</a> |
+        <a href="/students/add">Add Student</a> |
+        <a href="/">List of Students</a>
+    </div>
+
+    <h1>Edit Student</h1>
+
+    <form action="/students/update/<%= student.id %>" method="POST">
+
+        <label>Name:</label>
+
+        <input
+            type="text"
+            name="name"
+            value="<%= student.name %>"
+            required
+            minlength="3"
+            pattern="[A-Za-z ]+"
+        >
+
+        <label>Course:</label>
+
+        <input
+            type="text"
+            name="course"
+            value="<%= student.course %>"
+            required
+        >
+
+        <label>Marks:</label>
+
+        <input
+            type="number"
+            name="marks"
+            value="<%= student.marks %>"
+            required
+            min="0"
+            max="100"
+        >
+
+        <button type="submit">
+            Update Student
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
