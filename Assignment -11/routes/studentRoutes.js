@@ -1,35 +1,27 @@
 import express from 'express';
-
 import {
-
-    getStudents,
-    showAddForm,
     addStudent,
-    viewStudent,
-    showEditForm,
+    getStudents,
+    getStudentById,
     updateStudent,
     deleteStudent,
-    searchStudent
-
-}
-from '../controllers/studentController.js';
+    searchStudents
+} from '../controllers/studentController.js';
 
 const router = express.Router();
 
-router.get('/',getStudents);
+// 1. Static search route (Must stay at the top)
+router.get('/students/search', searchStudents);
 
-router.get('/add',showAddForm);
+// 2. Base collection routes
+router.route('/students')
+    .get(getStudents)
+    .post(addStudent);
 
-router.post('/add',addStudent);
-
-router.get('/view/:id',viewStudent);
-
-router.get('/edit/:id',showEditForm);
-
-router.post('/update/:id',updateStudent);
-
-router.get('/delete/:id',deleteStudent);
-
-router.get('/search',searchStudent);
+// 3. Dynamic element routes
+router.route('/students/:id')
+    .get(getStudentById)
+    .put(updateStudent)
+    .delete(deleteStudent);
 
 export default router;
