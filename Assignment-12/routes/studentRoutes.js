@@ -1,27 +1,35 @@
 import express from 'express';
 
 import {
-    addStudent,
+
     getStudents,
-    getStudentById,
+    showAddForm,
+    addStudent,
+    viewStudent,
+    showEditForm,
     updateStudent,
     deleteStudent,
-    searchStudents
+    searchStudent
+
 }
 from '../controllers/studentController.js';
 
 const router = express.Router();
 
-router.post('/students', addStudent);
+router.get('/',getStudents);
 
-router.get('/students', getStudents);
+router.get('/add',showAddForm);
 
-router.get('/students/search', searchStudents);
+router.post('/add',addStudent);
 
-router.get('/students/:id', getStudentById);
+router.get('/view/:id',viewStudent);
 
-router.put('/students/:id', updateStudent);
+router.get('/edit/:id',showEditForm);
 
-router.delete('/students/:id', deleteStudent);
+router.post('/update/:id',updateStudent);
+
+router.get('/delete/:id',deleteStudent);
+
+router.get('/search',searchStudent);
 
 export default router;

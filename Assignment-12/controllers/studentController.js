@@ -1,101 +1,58 @@
-import Student from '../models/Student.js';
-
-export const addStudent = async(req,res)=>
-{
-    try
-    {
-        const student = await Student.create(req.body);
-        res.json(student);
-    }
-    catch(error)
-    {
-        res.status(500).send(error.message);
-    }
-}
+import Student from '../models/student.js';
 
 export const getStudents = async(req,res)=>
 {
-    try
-    {
-        const students = await Student.find();
-        res.json(students);
-    }
-    catch(error)
-    {
-        res.status(500).send(error.message);
-    }
+    const students = await Student.find();
+    res.render('index',{students});
 }
 
-export const getStudentById = async(req,res)=>
+export const showAddForm = (req,res)=>
 {
-    try
-    {
-        const student = await Student.findById(req.params.id);
+    res.render('addstudent');
+}
 
-        if(!student)
-        {
-            return res.status(404).send("Student not found");
-        }
+export const addStudent = async(req,res)=>
+{
+    await Student.create(req.body);
+    res.redirect('/students');
+}
 
-        res.json(student);
-    }
-    catch(error)
-    {
-        res.status(500).send(error.message);
-    }
+export const viewStudent = async(req,res)=>
+{
+    const student = await Student.findById(req.params.id);
+    res.render('viewstudent',{student});
+}
+
+export const showEditForm = async(req,res)=>
+{
+    const student = await Student.findById(req.params.id);
+    res.render('editstudent',{student});
 }
 
 export const updateStudent = async(req,res)=>
 {
-    try
-    {
-        const student = await Student.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            {new:true}
-        );
-
-        res.json(student);
-    }
-    catch(error)
-    {
-        res.status(500).send(error.message);
-    }
+    await Student.findByIdAndUpdate(req.params.id,req.body);
+    res.redirect('/students');
 }
 
 export const deleteStudent = async(req,res)=>
 {
-    try
-    {
-        await Student.findByIdAndDelete(req.params.id);
-
-        res.send("Student deleted");
-    }
-    catch(error)
-    {
-        res.status(500).send(error.message);
-    }
+    await Student.findByIdAndDelete(req.params.id);
+    res.redirect('/students');
 }
 
-export const searchStudents = async(req,res)=>
+export const searchStudent = async(req,res)=>
 {
-    try
-    {
-        const keyword = req.query.keyword;
+    const keyword = req.query.keyword;
 
-        const students = await Student.find({
-            $or:
-            [
-                {name:{$regex:keyword,$options:'i'}},
-                {course:{$regex:keyword,$options:'i'}},
-                {city:{$regex:keyword,$options:'i'}}
-            ]
-        });
+    const students = await Student.find({
+        $or:
+        [
+            {name:{$regex:keyword,$options:'i'}},
+            {course:{$regex:keyword,$options:'i'}},
+            {city:{$regex:keyword,$options:'i'}}
+        ]
+    });
 
-        res.json(students);
-    }
-    catch(error)
-    {
-        res.status(500).send(error.message);
-    }
+    res.render('index',{students});
 }

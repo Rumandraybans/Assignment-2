@@ -1,32 +1,52 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import path from 'url';
+import { fileURLToPath } from 'url';
+import pathModule from 'path';
 
 import studentRoutes from './routes/studentRoutes.js';
 
-dotenv.config();
-
-console.log(process.env.MONGO_URI);
-
 const app = express();
 
-app.use(express.json());
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = pathModule.dirname(__filename);
 
-mongoose.connect(process.env.MONGO_URI)
-.then(() =>
-{
+app.use(express.urlencoded({extended:true}));
+app.use(express.static(pathModule.join(__dirname,'public')));
+app.set('view engine','ejs');
+
+mongoose.connect("mongodb://127.0.0.1:27017/studentDB")
+.then(()=> {
     console.log("Database Connected");
 })
-.catch((error) =>
-{
+.catch((error)=> {
     console.log(error.message);
 });
 
-app.use('/', studentRoutes);
+app.use('/students', studentRoutes);
 
-const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () =>
-{
-    console.log(`Server started at port ${PORT}`);
+app.get('/about-us', (req, res) => {
+    res.send(`
+        <div style="font-family: system-ui, sans-serif; text-align: center; padding: 50px;">
+            <h2>About Our Institution</h2>
+            <p>Welcome to Student Management System .</p>
+            <a href="/students" style="color: #0d6efd; text-decoration: none;">&larr; Back to Dashboard</a>
+        </div>
+    `);
+});
+
+app.get('/contact-us', (req, res) => {
+    res.send(`
+        <div style="font-family: system-ui, sans-serif; text-align: center; padding: 50px;">
+            <h2>Contact Administration Team</h2>
+            <p>For system inquiries or administrative support, email: support@management.com</p>
+            <a href="/students" style="color: #0d6efd; text-decoration: none;">&larr; Back to Dashboard</a>
+        </div>
+    `);
+});
+
+app.listen(3000, () => {
+    console.log(" Server successfully started!");
+    console.log("Access at: http://localhost:3000/students");
 });
